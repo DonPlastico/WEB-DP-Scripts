@@ -903,7 +903,7 @@ const scriptsData = [
         id: "dp-mileage",
         name: "DP-VehicleMileage",
         price: 6.22,
-        img: "Images/Scripts/DP-VehicleMileage.png",
+        img: "Images/Scripts/proximamente.jpg",
         tags: ["QBCore"],
         descKey: "desc_mileage"
     },
@@ -950,9 +950,9 @@ const scriptsData = [
     {
         id: "dp-quests",
         name: "DP-Quests",
-        price: 49.99, // WIP muy ambicioso
+        price: 0.00,
         img: "Images/Scripts/proximamente.jpg",
-        tags: ["QBCore", "WIP"],
+        tags: ["Proximamente"],
         descKey: "desc_quests"
     },
     {
@@ -960,8 +960,40 @@ const scriptsData = [
         name: "DP-Tattoos V1",
         price: 0.00,
         img: "Images/Scripts/proximamente.jpg",
-        tags: ["QBCore", "Free"],
+        tags: ["Proximamente"],
         descKey: "desc_tattoos"
+    },
+    {
+        id: "dp-vehicleshop",
+        name: "DP-VehicleShop",
+        price: 0.00,
+        img: "Images/Scripts/proximamente.jpg",
+        tags: ["Proximamente"],
+        descKey: "desc_vehicleshop"
+    },
+    {
+        id: "dp-pausemenu",
+        name: "DP-PauseMenu",
+        price: 0.00,
+        img: "Images/Scripts/proximamente.jpg",
+        tags: ["Proximamente"],
+        descKey: "desc_pausemenu"
+    },
+    {
+        id: "dp-admin",
+        name: "DP-Admin",
+        price: 0.00,
+        img: "Images/Scripts/proximamente.jpg",
+        tags: ["Proximamente"],
+        descKey: "desc_admin"
+    },
+    {
+        id: "dp-Racing",
+        name: "DP-Racing",
+        price: 0.00,
+        img: "Images/Scripts/proximamente.jpg",
+        tags: ["Proximamente"],
+        descKey: "desc_Racing"
     }
 ];
 
