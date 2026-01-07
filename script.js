@@ -884,6 +884,30 @@ const scriptsData = [
         descKey: "desc_banking"
     },
     {
+        id: "dp-skate",
+        name: "DP-StreetBoard",
+        price: 12.95,
+        img: "Images/Scripts/DP-StreetBoard.png",
+        tags: ["QBCore"],
+        descKey: "desc_skate"
+    },
+    {
+        id: "dp-escaparate",
+        name: "DP-PdmEscaparates",
+        price: 0.00,
+        img: "Images/Scripts/DP-PdmEscaparates.png",
+        tags: ["QBCore", "Free"],
+        descKey: "desc_escaparate"
+    },
+    {
+        id: "dp-mileage",
+        name: "DP-VehicleMileage",
+        price: 6.22,
+        img: "Images/Scripts/DP-VehicleMileage.png",
+        tags: ["QBCore"],
+        descKey: "desc_mileage"
+    },
+    {
         id: "dp-fuelv1",
         name: "DP-Fuel V1",
         price: 0.00,
