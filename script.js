@@ -948,6 +948,14 @@ const scriptsData = [
         descKey: "desc_animations"
     },
     {
+        id: "dp-realmoney",
+        name: "DP-RealMoney",
+        price: 1.99,
+        img: "Images/Scripts/DP-RealMoney.png",
+        tags: ["QBCore"],
+        descKey: "desc_realmoney"
+    },
+    {
         id: "dp-quests",
         name: "DP-Quests",
         price: 0.00,
