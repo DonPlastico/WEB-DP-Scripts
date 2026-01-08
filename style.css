@@ -1,9 +1,9 @@
 /* ==========================================================================
-   1. VARIABLES Y CONFIGURACIÓN (CORE)
-   Aquí definimos la paleta de colores "Cyber Aurora".
+   1. VARIABLES Y CONFIG (CORE)
+   Aqui defino los colores "Cyber Aurora" que me molan
    ========================================================================== */
 :root {
-    /* FORZADO DE TEMA OSCURO (Para navegadores) */
+    /* Fuerzo tema oscuro pal navegador */
     color-scheme: dark;
 
     /* PALETA DE COLORES */
@@ -12,7 +12,7 @@
     --card-border: rgba(255, 255, 255, 0.08);
 
     --accent-primary: #00f3ff;
-    /* CIAN NEÓN */
+    /* CIAN NEON */
     --accent-secondary: #6b148a;
     /* VIOLETA */
     --accent-glow: rgba(0, 243, 255, 0.3);
@@ -21,16 +21,16 @@
     --text-main: #ffffff;
     --text-muted: #a0a0a0;
 
-    /* TIPOGRAFÍAS */
+    /* FUENTES */
     --font-main: 'Inter', sans-serif;
-    /* Para textos largos */
+    /* Texto normal */
     --font-code: 'JetBrains Mono', monospace;
-    /* Para números, precios y títulos técnicos */
+    /* Numeros y precios */
 }
 
 /* ==========================================================================
-   2. RESET Y ESTILOS BASE
-   Configuración inicial para que todo se vea igual en todos los navegadores.
+   2. RESET Y BASES
+   Pa que se vea igual en todos los laos
    ========================================================================== */
 * {
     margin: 0;
@@ -39,18 +39,18 @@
 }
 
 body {
-    /* El !important evita que extensiones externas cambien el fondo */
+    /* El important es pa que ningun plugin me cambie el fondo */
     background-color: var(--bg-color) !important;
     color: var(--text-main) !important;
     font-family: var(--font-main);
     min-height: 100vh;
     overflow-x: hidden;
 
-    /* Evita que Opera GX invierta los colores */
+    /* Evito que el opera gx me invierta los colores */
     filter: none !important;
 }
 
-/* Prevenir inversión de colores en multimedia */
+/* Pa que las imagenes no se inviertan */
 img,
 video,
 iframe,
@@ -68,7 +68,7 @@ ul {
     list-style: none;
 }
 
-/* FONDO GRADIENTE FIJO */
+/* FONDO CON IMAGEN FIJA */
 #canvas-bg {
     position: fixed;
     top: 0;
@@ -77,9 +77,9 @@ ul {
     height: 100%;
     z-index: -10;
     background:
-        /* Capa superior: Gradiente oscuro */
+        /* Capa de arriba: Gradiente oscuro */
         linear-gradient(90deg, rgba(3, 3, 5, 0.95) 0%, rgba(3, 3, 5, 0.7) 45%, rgba(107, 20, 138, 0.1) 100%),
-        /* Capa inferior: Imagen de fondo (Asegúrate que la ruta sea correcta) */
+        /* Capa de abajo: Imagen de fondo */
         url('Images/Fondo.png');
     background-size: cover;
     background-position: center;
@@ -87,17 +87,15 @@ ul {
 }
 
 /* ==========================================================================
-   3. BARRA DE NAVEGACIÓN (NAVBAR)
-   Diseño de 3 columnas: Logo | Menú | Herramientas
+   3. BARRA DE NAVEGACION (NAVBAR)
+   Diseño en 3 columnas: Logo | Menu | Iconos
    ========================================================================== */
 .navbar {
     display: grid;
     grid-template-columns: 1fr auto 1fr;
-    /* Izq | Centro | Der */
     align-items: center;
     padding: 15px 40px;
     background: rgba(3, 3, 5, 0.85);
-    /* Semitransparente */
     backdrop-filter: blur(15px);
     /* Efecto cristal */
     border-bottom: 1px solid var(--card-border);
@@ -107,7 +105,7 @@ ul {
     height: 80px;
 }
 
-/* 3.1 LOGOTIPO (Izquierda) */
+/* 3.1 LOGO */
 .nav-brand {
     justify-self: start;
 }
@@ -125,7 +123,7 @@ ul {
     text-shadow: 0 0 10px var(--accent-glow);
 }
 
-/* 3.2 MENÚ CENTRAL */
+/* 3.2 MENU CENTRAL */
 .nav-center {
     justify-self: center;
     display: flex;
@@ -151,7 +149,7 @@ ul {
     color: var(--accent-primary);
 }
 
-/* Punto brillante bajo el enlace activo */
+/* Puntito brillante debajo del activo */
 .nav-center a.active::after {
     content: '';
     position: absolute;
@@ -165,7 +163,7 @@ ul {
     box-shadow: 0 0 5px var(--accent-primary);
 }
 
-/* 3.3 HERRAMIENTAS DERECHA (Idioma, Carrito, Login) */
+/* 3.3 ICONOS DERECHA */
 .nav-right {
     justify-self: end;
     display: flex;
@@ -176,11 +174,10 @@ ul {
 }
 
 /* ==========================================================================
-   4. MENÚS DESPLEGABLES (DROPDOWNS)
-   Estilos compartidos y específicos para Idioma y Carrito
+   4. MENUS DESPLEGABLES (IDIOMA Y CARRO)
    ========================================================================== */
 
-/* --- A. SELECTOR DE IDIOMA --- */
+/* --- A. SELECTOR IDIOMA --- */
 .lang-menu-wrapper {
     position: relative;
     display: inline-block;
@@ -258,7 +255,7 @@ ul {
     border-radius: 2px;
 }
 
-/* Scrollbar personalizada para dropdowns */
+/* Scrollbar personalizada */
 .lang-dropdown-list::-webkit-scrollbar,
 .cart-items-container::-webkit-scrollbar,
 .payments-list-container::-webkit-scrollbar {
@@ -271,7 +268,7 @@ ul {
     border-radius: 10px;
 }
 
-/* --- B. SELECTOR DE CARRITO --- */
+/* --- B. CARRITO --- */
 .cart-menu-wrapper {
     position: relative;
     display: inline-block;
@@ -294,7 +291,6 @@ ul {
     position: absolute;
     top: 140%;
     right: 0;
-    /* Alineado a la derecha */
     width: 350px;
     background: #0a0a0c;
     border: 1px solid var(--card-border);
@@ -408,11 +404,27 @@ ul {
     transform: scale(1.1);
 }
 
-.cart-footer {
-    padding: 15px 20px;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-    background: rgba(0, 0, 0, 0.3);
+.checkout-btn {
+    width: 100%;
+    padding: 12px;
+    background: var(--accent-primary);
+    color: black;
+    border: none;
+    border-radius: 6px;
+    font-weight: 800;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: 0.3s;
 }
+
+.checkout-btn:hover {
+    background: white;
+    box-shadow: 0 0 15px var(--accent-primary);
+}
+
+/* =========================================
+   11.b CUPON Y TOTALES DEL CARRO
+   ========================================= */
 
 .cart-footer-actions {
     background: #0f0f12;
@@ -423,7 +435,7 @@ ul {
     gap: 15px;
 }
 
-/* Sección Cupón */
+/* Seccion Cupon */
 .coupon-section {
     display: flex;
     gap: 10px;
@@ -498,7 +510,7 @@ ul {
 
 .summary-row.discount-row {
     color: #2ecc71;
-    /* Verde para descuento */
+    /* Verde pal descuento */
 }
 
 .summary-row.total-row {
@@ -510,34 +522,7 @@ ul {
     padding-top: 5px;
 }
 
-.cart-total {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 15px;
-    font-family: var(--font-code);
-    font-size: 1rem;
-    font-weight: 700;
-}
-
-.checkout-btn {
-    width: 100%;
-    padding: 12px;
-    background: var(--accent-primary);
-    color: black;
-    border: none;
-    border-radius: 6px;
-    font-weight: 800;
-    text-transform: uppercase;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.checkout-btn:hover {
-    background: white;
-    box-shadow: 0 0 15px var(--accent-primary);
-}
-
-/* --- C. BOTÓN LOGIN (Navbar) --- */
+/* --- C. BOTON LOGIN --- */
 .login-btn {
     background: var(--card-bg);
     border: 1px solid var(--accent-secondary);
@@ -558,7 +543,7 @@ ul {
 }
 
 /* ==========================================================================
-   5. SECCIÓN HERO (PORTADA PRINCIPAL)
+   5. SECCION HERO (PORTADA)
    ========================================================================== */
 .hero-container {
     padding: 147px 0 50px 10%;
@@ -571,7 +556,7 @@ ul {
     gap: 40px;
 }
 
-/* 5.1 TEXTOS IZQUIERDA */
+/* Texto Izquierda */
 .hero-content {
     flex: 1;
     min-width: 300px;
@@ -613,7 +598,7 @@ ul {
     max-width: 500px;
 }
 
-/* 5.2 BOTONES CTA (Call to Action) */
+/* Botones CTA */
 .cta-group {
     display: flex;
     gap: 20px;
@@ -653,7 +638,7 @@ ul {
     border-color: white;
 }
 
-/* 5.3 WIDGETS DERECHA */
+/* Widgets Derecha */
 .hero-widgets {
     flex: 0.8;
     min-width: 300px;
@@ -683,7 +668,7 @@ ul {
     box-shadow: 0 0 20px rgba(0, 243, 255, 0.1);
 }
 
-/* Estilos Widget Pagos */
+/* Widget Pagos */
 .widget-header {
     font-family: var(--font-code);
     color: var(--accent-primary);
@@ -759,7 +744,7 @@ ul {
     text-shadow: 0 0 5px var(--accent-glow);
 }
 
-/* Estilos Widget Destacado */
+/* Widget Destacado */
 .featured-product {
     position: relative;
     padding: 0;
@@ -833,7 +818,7 @@ ul {
 }
 
 /* ==========================================================================
-   7. TIENDA (BEST SELLING SCRIPTS)
+   7. TIENDA (LOS MAS VENDIDOS)
    ========================================================================== */
 .best-selling-section {
     padding: 80px 10%;
@@ -841,7 +826,7 @@ ul {
     position: relative;
 }
 
-/* Encabezado Premium */
+/* Encabezado */
 .section-header-wrapper {
     text-align: center;
     margin-bottom: 60px;
@@ -908,7 +893,7 @@ ul {
     left: 0;
 }
 
-/* Grid de Productos */
+/* Grid Productos */
 .products-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -953,7 +938,7 @@ ul {
     filter: brightness(0.7);
 }
 
-/* Botón Añadir al Carrito (Hover Overlay) */
+/* Boton Hover */
 .overlay {
     position: absolute;
     top: 0;
@@ -996,15 +981,7 @@ ul {
     box-shadow: 0 0 20px var(--accent-primary);
 }
 
-/* Estado de botón "Ya en carrito" */
-.add-cart-btn.disabled {
-    background: #2d2d2d;
-    color: #666;
-    cursor: not-allowed;
-    box-shadow: none;
-}
-
-/* Detalles del Producto */
+/* Info Producto */
 .card-info {
     padding: 25px;
     display: flex;
@@ -1067,18 +1044,18 @@ ul {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 30px;
-    margin-top: 30px;
+    margin-top: 40px;
 }
 
 .faq-card {
     background: rgba(20, 20, 22, 0.6);
     border: 1px solid #2D2D2D;
-    padding: 30px 20px;
+    padding: 40px 30px;
     border-radius: 12px;
     transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
-    min-height: 150px;
+    min-height: 240px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -1124,7 +1101,7 @@ ul {
 }
 
 /* ==========================================================================
-   9. LOGIN MODAL Y PERFIL DE USUARIO
+   9. LOGIN MODAL Y PERFIL
    ========================================================================== */
 .modal-overlay {
     position: fixed;
@@ -1258,7 +1235,7 @@ ul {
     font-size: 0.7rem;
 }
 
-/* Perfil de Usuario Logueado (Navbar) */
+/* Perfil Usuario */
 .user-profile-nav {
     display: flex;
     align-items: center;
@@ -1291,7 +1268,7 @@ ul {
 }
 
 /* ==========================================================================
-   10. FOOTER (PIE DE PÁGINA)
+   10. FOOTER (PIE PAGINA)
    ========================================================================== */
 .legal-footer {
     padding: 0 10% 40px;
@@ -1342,21 +1319,21 @@ ul {
 }
 
 /* =========================================
-   11. VISTA PAQUETES (PACKAGES VIEW)
+   13. VISTA PAQUETES (PACKAGES VIEW) - FINAL
    ========================================= */
 
-/* Animación de cambio de vista */
+/* Animacion al cambiar */
 .view-section {
-    animation: fadeInList 1.5s ease;
+    animation: fadeInList 0.5s ease;
 }
 
-/* 1. Cabecera (AÚN MÁS GRANDE E IMPONENTE) */
+/* 1. Cabecera GIGANTE */
 .packages-header {
     background: linear-gradient(180deg, rgba(107, 20, 138, 0.2) 0%, rgba(3, 3, 5, 1) 100%),
         url('Images/Fondo.png');
     background-size: cover;
     background-position: center;
-    /* Aumentamos padding: 250px arriba, 150px abajo */
+    /* Mucho padding pa que se vea enorme */
     padding: 250px 20px 150px;
     text-align: center;
     position: relative;
@@ -1365,7 +1342,7 @@ ul {
 
 .pkg-header-content h1 {
     font-size: 5rem;
-    /* Título GIGANTE */
+    /* Titulo tocho */
     font-weight: 900;
     margin-bottom: 20px;
     text-transform: uppercase;
@@ -1379,11 +1356,10 @@ ul {
     font-size: 1.3rem;
     max-width: 800px;
     margin: 0 auto 50px;
-    /* Más separación con los filtros */
     line-height: 1.6;
 }
 
-/* Botones de Filtro */
+/* Filtros */
 .pkg-filters {
     display: flex;
     justify-content: center;
@@ -1393,7 +1369,6 @@ ul {
 
 .filter-btn {
     background: rgba(0, 0, 0, 0.6);
-    /* Más oscuro para contraste */
     border: 1px solid var(--card-border);
     color: white;
     padding: 14px 35px;
@@ -1416,7 +1391,7 @@ ul {
     transform: scale(1.05);
 }
 
-/* 2. Barra de Búsqueda (FLOTANTE SIN HUECOS) */
+/* 2. Barra de Busqueda FLOTANTE */
 .packages-toolbar {
     background: transparent;
     padding: 0 10%;
@@ -1424,11 +1399,10 @@ ul {
     justify-content: center;
     position: relative;
     z-index: 10;
-    /* Encima de todo */
     margin-top: -40px;
-    /* Sube la mitad de su altura sobre la foto */
+    /* La subo parriba */
     margin-bottom: -40px;
-    /* IMPORTANTE: Elimina su propio espacio para que el negro suba */
+    /* Y quito el hueco de abajo */
 }
 
 .search-container {
@@ -1449,10 +1423,9 @@ ul {
 .search-container input {
     width: 100%;
     background: #0f0f12;
-    /* Fondo casi negro sólido */
     border: 1px solid rgba(255, 255, 255, 0.1);
     padding: 25px 30px 25px 70px;
-    /* Input grande y alto */
+    /* Input grande */
     border-radius: 15px;
     color: white;
     font-family: var(--font-main);
@@ -1460,7 +1433,6 @@ ul {
     outline: none;
     transition: 0.3s;
     box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
-    /* Sombra muy fuerte para separar */
 }
 
 .search-container input:focus {
@@ -1468,21 +1440,15 @@ ul {
     box-shadow: 0 20px 60px rgba(0, 243, 255, 0.2);
 }
 
-/* 3. Grid de Paquetes (AHORA CONECTADO PERFECTAMENTE) */
+/* 3. Grid de Paquetes */
 .packages-grid-container {
     background: #050505;
-    /* Fondo negro sólido */
-
-    /* TRUCO CLAVE: */
-    /* Padding gigante arriba para que las cards no queden debajo de la barra */
+    /* Padding tocho pa compensar la barra flotante */
     padding: 120px 10% 100px;
-
     min-height: 60vh;
     position: relative;
     z-index: 5;
-    /* Debajo de la barra de búsqueda */
     border-top: 1px solid rgba(255, 255, 255, 0.03);
-    /* Línea sutil de separación */
 }
 
 .packages-grid {
@@ -1491,7 +1457,7 @@ ul {
     gap: 40px;
 }
 
-/* Card de Paquete */
+/* Cards */
 .pkg-card {
     background: #0f0f12;
     border: 1px solid var(--card-border);
@@ -1512,7 +1478,6 @@ ul {
 .pkg-img-container {
     position: relative;
     height: 240px;
-    /* Imagen más alta */
     overflow: hidden;
 }
 
@@ -1564,32 +1529,28 @@ ul {
     letter-spacing: 0.5px;
 }
 
+/* Descripcion dentro de la card */
 .pkg-desc {
     color: var(--text-muted);
-    /* Gris claro */
     font-size: 0.9rem;
-    /* Tamaño legible pero no gigante */
     line-height: 1.5;
-    /* Buena separación entre líneas */
     margin-bottom: 20px;
-    /* Separación con el precio */
     font-weight: 400;
 
-    /* Opcional: Limitar a 3 líneas y poner "..." si es muy largo */
+    /* Corto el texto si es muy largo */
     display: -webkit-box;
     -webkit-line-clamp: 3;
     line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
     min-height: 60px;
-    /* Altura mínima para que todas las cards se alineen igual */
 }
 
-/* Lista de "Incluye" en Paquetes */
+/* Lista de lo que incluye */
 .pkg-includes-section {
     background: rgba(255, 255, 255, 0.03);
-    border-radius: 4px;
-    padding: 4px;
+    border-radius: 8px;
+    padding: 10px;
     margin-bottom: 15px;
     border: 1px solid rgba(255, 255, 255, 0.05);
 }
@@ -1612,7 +1573,7 @@ ul {
 }
 
 .include-item {
-    font-size: 0.65rem;
+    font-size: 0.75rem;
     color: white;
     background: rgba(0, 0, 0, 0.4);
     padding: 4px 8px;
@@ -1624,11 +1585,10 @@ ul {
 
 .include-item i {
     color: var(--accent-primary);
-    /* Check verde/cian */
     font-size: 0.7rem;
 }
 
-/* Zona de Precios */
+/* Precios */
 .pkg-price-row {
     display: flex;
     align-items: center;
@@ -1649,7 +1609,6 @@ ul {
 
 .pkg-new-price {
     color: var(--accent-secondary);
-    /* Violeta */
     font-size: 1.5rem;
     font-weight: 800;
     font-family: var(--font-code);
@@ -1680,40 +1639,11 @@ ul {
     box-shadow: 0 0 25px var(--accent-glow);
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /* ==========================================================================
-   ANIMACIONES Y RESPONSIVE (MÓVIL/TABLET)
+   11. ANIMACIONES Y RESPONSIVE (MÓVIL/TABLET)
    ========================================================================== */
 
-/* Animación de entrada para listas */
+/* Entrada suave */
 @keyframes fadeInList {
     from {
         opacity: 0;
@@ -1726,7 +1656,7 @@ ul {
     }
 }
 
-/* Animación de scroll del texto Marquee */
+/* Scroll texto */
 @keyframes scrollText {
     0% {
         transform: translateX(0);
@@ -1737,7 +1667,7 @@ ul {
     }
 }
 
-/* Tablets y Portátiles pequeños */
+/* Tablets */
 @media (max-width: 1024px) {
 
     .products-grid,
@@ -1746,24 +1676,23 @@ ul {
     }
 }
 
-/* Móviles y Tablets verticales */
+/* Moviles */
 @media (max-width: 900px) {
     .navbar {
         grid-template-columns: 1fr 1fr;
-        /* 2 Columnas */
     }
 
     .nav-center {
         display: none;
     }
 
-    /* Ocultar menú enlaces */
+    /* Quito el menu si es muy pequeño */
     .nav-right {
         justify-self: end;
     }
 }
 
-/* Móviles pequeños */
+/* Moviles peques */
 @media (max-width: 768px) {
 
     .products-grid,

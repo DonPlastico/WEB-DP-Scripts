@@ -1,46 +1,46 @@
 /* ==========================================================================
-   1. DATOS Y CONFIGURACIÓN GLOBAL
+   1. DATOS Y COSAS GLOBALES
+   Aqui defino los datos falsos y las monedas y eso
    ========================================================================== */
 
-// Datos simulados para el Widget de "Últimas Compras" (Mix Scripts + Packs)
+// Datos fake para el Widget de "Ultimas Compras" (mezcle packs y scripts sueltos pa que se vea varidado)
 const recentPaymentsData = [
-    { user: "xX_Kiler_Xx", script: "UI ESSENTIALS", price: "3.99€", avatar: "Felix" }, // Pack
+    { user: "xX_Kiler_Xx", script: "UI ESSENTIALS", price: "3.99€", avatar: "Felix" },
     { user: "RoleplayKing", script: "DP-Nitrous", price: "9.95€", avatar: "Aneka" },
     { user: "Sarah_Dev", script: "DP-Hud", price: "17.99€", avatar: "Jocelyn" },
     { user: "Don_Gato", script: "DP-Garages", price: "34.99€", avatar: "Leo" },
-    { user: "FiveM_Master", script: "MECHANIC SUITE", price: "54.99€", avatar: "Jack" }, // Pack
+    { user: "FiveM_Master", script: "MECHANIC SUITE", price: "54.99€", avatar: "Jack" },
     { user: "PoliceChief", script: "DP-Menu + Input", price: "14.95€", avatar: "Avery" },
-    { user: "Medic_Girl", script: "IDENTITY PACK", price: "29.99€", avatar: "Maria" }, // Pack
+    { user: "Medic_Girl", script: "IDENTITY PACK", price: "29.99€", avatar: "Maria" },
     { user: "Gangster01", script: "DP-Boombox", price: "44.99€", avatar: "Brian" },
     { user: "Mechanic_Joe", script: "DP-Fuel V2", price: "24.95€", avatar: "Christopher" },
-    { user: "DJ_Mike", script: "STREET KING", price: "89.99€", avatar: "Caleb" }, // Pack
+    { user: "DJ_Mike", script: "STREET KING", price: "89.99€", avatar: "Caleb" },
     { user: "Banker_RP", script: "DP-Banking", price: "29.99€", avatar: "Sawyer" },
     { user: "Trucker_88", script: "DP-TextUI", price: "4.99€", avatar: "Nala" },
     { user: "Fashion_Dva", script: "DP-Clothing", price: "18.99€", avatar: "Valentina" },
-    { user: "Admin_God", script: "ULTIMATE COLLECTION", price: "99.99€", avatar: "Alexander" }, // Pack
+    { user: "Admin_God", script: "ULTIMATE COLLECTION", price: "99.99€", avatar: "Alexander" },
     { user: "Emote_Lover", script: "DP-Animations", price: "16.99€", avatar: "Willow" },
     { user: "Hacker_Neo", script: "DP-AntiBackdoor", price: "50.00€", avatar: "Ryker" },
-    { user: "Newbie_Player", script: "VISUAL OVERHAUL", price: "29.95€", avatar: "Easton" } // Pack
+    { user: "Newbie_Player", script: "VISUAL OVERHAUL", price: "29.95€", avatar: "Easton" }
 ];
 
-// Tasas de cambio aproximadas (Base: 1 EUR)
-// Si quieres actualizar precios reales, modifica estos números.
+// Tasas de cambio aprox... si sube el dolar tendre que cambiar esto a mano
 const exchangeRates = {
     EUR: 1.00,
-    GBP: 0.86,  // Libra Esterlina
-    USD: 1.08,  // Dólar Americano
-    PLN: 4.32,  // Zloty Polaco
-    RUB: 98.50, // Rublo Ruso
-    SEK: 11.20, // Corona Sueca
-    DKK: 7.46,  // Corona Danesa
-    CZK: 25.30, // Corona Checa
-    HUF: 395.00,// Forinto Húngaro
-    TRY: 34.50, // Lira Turca
-    JPY: 163.00,// Yen Japonés
-    KRW: 1450.00 // Won Coreano
+    GBP: 0.86,  // Libra
+    USD: 1.08,  // Dolar
+    PLN: 4.32,  // Polonia
+    RUB: 98.50, // Rusia
+    SEK: 11.20, // Suecia
+    DKK: 7.46,  // Dinamarca
+    CZK: 25.30, // Checa
+    HUF: 395.00,// Hungria
+    TRY: 34.50, // Turkia
+    JPY: 163.00,// Japon
+    KRW: 1450.00 // Korea
 };
 
-// Mapa que asocia cada código de idioma con su moneda oficial
+// Mapa pa saber que moneda usa cada idioma
 const currencyMap = {
     'es': 'EUR', 'fr': 'EUR', 'de': 'EUR', 'it': 'EUR', 'pt': 'EUR',
     'nl': 'EUR', 'fi': 'EUR', 'en': 'GBP', 'pl': 'PLN', 'ru': 'RUB',
@@ -48,49 +48,48 @@ const currencyMap = {
     'ja': 'JPY', 'ko': 'KRW'
 };
 
-// Variables de estado global
-let translations = {}; // Aquí se cargarán los textos del locales.json
-let cart = JSON.parse(localStorage.getItem('dp_cart')) || []; // Cargar carrito guardado o iniciar vacío
+// Variables globales que voy a usar luego
+let translations = {}; // Aqui cargare el json de idiomas
+let cart = JSON.parse(localStorage.getItem('dp_cart')) || []; // Recupero el carro si hay algo guardado
 
 /* ==========================================================================
-   2. SISTEMA DE TRADUCCIÓN Y MONEDA
-   Carga textos, cambia el idioma y recalcula precios.
+   2. SISTEMA DE TRADUCCION Y MONEDAS
+   Carga los textos y cambia precios y eso
    ========================================================================== */
 
 /**
- * Carga el archivo JSON de traducciones.
- * Se ejecuta al iniciar la página.
+ * Cargo el archivo de traducciones al empezar
  */
 async function loadTranslationsData() {
     try {
         const response = await fetch('./locales.json');
-        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        if (!response.ok) throw new Error(`Fallo al cargar: ${response.status}`);
 
         translations = await response.json();
 
-        // Una vez cargado, aplicamos el idioma guardado (o 'es' por defecto)
+        // Miro si tenia un idioma guardado, si no pongo español por defecto
         const savedLang = localStorage.getItem('dp_store_lang') || 'es';
         changeLanguage(savedLang);
 
     } catch (e) {
-        console.error("Error al cargar locales.json:", e);
+        console.error("Error cargando el locales.json:", e);
     }
 }
 
 /**
- * Función Principal: Cambia todo el sitio al idioma seleccionado.
- * @param {string} lang - Código del idioma (ej: 'es', 'en')
+ * Funcion tocha pa cambiar todo el idioma de la web
  */
 function changeLanguage(lang) {
+    // Si el idioma no existe, pongo español pa que no pete
     if (typeof translations === 'undefined' || !translations[lang]) lang = 'es';
 
     localStorage.setItem('dp_store_lang', lang);
 
-    // 1. Actualizar indicador en barra
+    // 1. Cambio el texto del botoncito de arriba
     const langText = document.getElementById('current-lang-text');
     if (langText) langText.textContent = lang.toUpperCase();
 
-    // 2. Actualizar textos normales (data-i18n)
+    // 2. Traduzco todo lo que tenga data-i18n
     const elements = document.querySelectorAll('[data-i18n]');
     elements.forEach(element => {
         const key = element.getAttribute('data-i18n');
@@ -99,7 +98,7 @@ function changeLanguage(lang) {
         }
     });
 
-    // 3. NUEVO: Actualizar Placeholders (Buscadores)
+    // 3. Tambien los placeholders de los inputs (buscadores)
     const placeholders = document.querySelectorAll('[data-i18n-placeholder]');
     placeholders.forEach(element => {
         const key = element.getAttribute('data-i18n-placeholder');
@@ -108,26 +107,28 @@ function changeLanguage(lang) {
         }
     });
 
-    // 4. Marcar activo en la lista
+    // 4. Marco el idioma en la lista desplegable pa que se vea cual esta
     const allLangs = document.querySelectorAll('#lang-dropdown li');
     allLangs.forEach(li => li.classList.remove('active-lang'));
     const activeItem = document.querySelector(`#lang-dropdown li[data-lang="${lang}"]`);
     if (activeItem) activeItem.classList.add('active-lang');
 
-    // 5. Actualizar UI global
+    // 5. Recalculo precios y el carrito con la nueva moneda
     updatePrices(lang);
     updateCartUI();
 
-    // 6. NUEVO: Re-renderizar los paquetes para traducir sus botones
+    // 6. Si estoy en la vista de paquetes, los renderizo de nuevo pa traducir los botones
     if (document.getElementById('view-packages').style.display === 'block') {
         const activeFilterBtn = document.querySelector('.filter-btn.active');
         const currentFilter = activeFilterBtn ? activeFilterBtn.getAttribute('data-filter') : 'all';
         renderPackages(currentFilter);
     }
 
+    // 7. Actualizo el sufijo del footer
     const footerLang = document.getElementById('footer-lang-code');
     if (footerLang) footerLang.textContent = lang.toUpperCase() + ".";
 
+    // Cierro el menu y refresco los pagos
     const dropdown = document.getElementById('lang-dropdown');
     if (dropdown) dropdown.classList.remove('active');
 
@@ -135,8 +136,7 @@ function changeLanguage(lang) {
 }
 
 /**
- * Recalcula los precios mostrados en el grid de productos.
- * Usa 'Intl.NumberFormat' para poner el símbolo de moneda correcto (£, €, ¥).
+ * Recalcula los precios que se ven en el grid
  */
 function updatePrices(lang) {
     const currency = currencyMap[lang] || 'EUR';
@@ -145,7 +145,7 @@ function updatePrices(lang) {
     const priceElements = document.querySelectorAll('.price');
 
     priceElements.forEach(el => {
-        // Obtenemos el precio base en EUR desde el HTML
+        // Pillo el precio base en euros que puse en el html
         const basePrice = parseFloat(el.getAttribute('data-base-price'));
 
         if (!isNaN(basePrice)) {
@@ -158,47 +158,48 @@ function updatePrices(lang) {
     });
 }
 
-// Alternar visualización del menú de idiomas
+// Abrir/Cerrar el menu de idiomas
 function toggleLangDropdown() {
     const dropdown = document.getElementById('lang-dropdown');
     const cartDropdown = document.getElementById('cart-dropdown');
 
-    if (cartDropdown) cartDropdown.classList.remove('active'); // Cerrar carrito si está abierto
+    if (cartDropdown) cartDropdown.classList.remove('active'); // Cierro el carro si esta abierto
     if (dropdown) dropdown.classList.toggle('active');
 }
 
 /* ==========================================================================
-   3. SISTEMA DE CARRITO DE COMPRAS (SHOPPING CART)
-   Lógica para añadir, borrar, cupones y guardar productos.
+   3. SISTEMA DE CARRITO (CART)
+   Toda la logica de añadir, borrar y los cupones
    ========================================================================== */
 
-// Variable normal. Al recargar (F5) vuelve a 0 automáticamente.
+// Variable pal descuento. Empieza en 0 al recargar (F5)
 let appliedDiscount = 0;
 
-// Alternar visualización del panel del carrito
+// Abrir/Cerrar el panel del carrito
 function toggleCartDropdown() {
     const dropdown = document.getElementById('cart-dropdown');
     const langDropdown = document.getElementById('lang-dropdown');
-    if (langDropdown) langDropdown.classList.remove('active');
+
+    if (langDropdown) langDropdown.classList.remove('active'); // Cierro idiomas
     if (dropdown) dropdown.classList.toggle('active');
 }
 
 /**
- * Añade un producto al carrito (CON VALIDACIÓN DE DUPLICADOS)
+ * Añado cosas al carro (Y miro que no este repe)
  */
 function addToCart(btn) {
     const productId = btn.getAttribute('data-id');
 
-    // 1. COMPROBAR SI YA EXISTE
+    // 1. Miro si ya lo tengo metido
     const exists = cart.find(item => item.id === productId);
 
     if (exists) {
-        // Feedback visual de ERROR (Rojo/Temblor)
+        // Le pongo el boton rojo pa que se entere
         const originalText = btn.innerHTML;
         const originalBg = btn.style.background;
 
         btn.innerHTML = '<i class="fas fa-times"></i> YA AÑADIDO';
-        btn.style.background = '#ff4757'; // Rojo
+        btn.style.background = '#ff4757';
         btn.style.color = 'white';
 
         setTimeout(() => {
@@ -206,10 +207,10 @@ function addToCart(btn) {
             btn.style.background = originalBg;
             btn.style.color = '';
         }, 1500);
-        return; // Detenemos la función, no añade nada.
+        return; // Me salgo, no añado nada
     }
 
-    // 2. SI NO EXISTE, LO AÑADIMOS
+    // 2. Si no esta, pues pa dentro
     const product = {
         id: productId,
         name: btn.getAttribute('data-name'),
@@ -222,7 +223,7 @@ function addToCart(btn) {
     saveCart();
     updateCartUI();
 
-    // Feedback visual de ÉXITO (Verde)
+    // Pongo el boton verde un rato
     const originalText = btn.innerHTML;
     btn.innerHTML = '<i class="fas fa-check"></i> AÑADIDO';
     btn.style.background = '#2ecc71';
@@ -234,54 +235,49 @@ function addToCart(btn) {
         btn.style.color = '';
     }, 1000);
 
+    // Abro el carro solo pa que vea que se añadio
     const dropdown = document.getElementById('cart-dropdown');
     if (dropdown) dropdown.classList.add('active');
 }
 
-// Eliminar un producto del carrito
+// Borrar algo del carro
 function removeFromCart(index) {
     cart.splice(index, 1);
     saveCart();
     updateCartUI();
 }
 
-// Aplicar Cupón de Descuento
+// Aplicar el cupon de descuento
 function applyCoupon() {
     const input = document.getElementById('coupon-input');
     const msg = document.getElementById('coupon-message');
     const code = input.value.toUpperCase().trim();
 
-    // LÓGICA DE CUPONES
+    // Logica simple pal cupon
     if (code === 'DP30') {
-        appliedDiscount = 0.30; // 30%
-        msg.textContent = '¡Código DP30 aplicado! (30% De descuento)';
-        msg.className = 'coupon-msg success';
-        updateCartUI();
-    } else if (code === 'ASHKBDAWKD') {
-        appliedDiscount = 0.64; // 64%
-        msg.textContent = '¡Código secreto aplicado! (64% De descuento)';
+        appliedDiscount = 0.30; // 30% descuento
+        msg.textContent = '¡Código DP30 aplicado! (30% OFF)';
         msg.className = 'coupon-msg success';
         updateCartUI();
     } else if (code === '') {
         msg.textContent = '';
     } else {
-        appliedDiscount = 0;
+        appliedDiscount = 0; // Quito descuento si falla
         msg.textContent = 'Código inválido o expirado.';
         msg.className = 'coupon-msg error';
         updateCartUI();
     }
 }
 
-// Guardar en LocalStorage
+// Guardo el carro en el navegador pa que no se borre
 function saveCart() {
     localStorage.setItem('dp_cart', JSON.stringify(cart));
 }
 
 /**
- * Renderiza el HTML del carrito y CALCULA TOTALES
+ * Renderizo el HTML del carro y calculo los totales
  */
 function updateCartUI() {
-    // Elementos DOM
     const countElement = document.getElementById('cart-count');
     const container = document.getElementById('cart-items-container');
     const subtotalElement = document.getElementById('cart-subtotal');
@@ -290,27 +286,18 @@ function updateCartUI() {
     const discountPriceElement = document.getElementById('cart-discount');
     const discountPercentElement = document.getElementById('discount-percent');
 
-    // Actualizar contador
-    if (countElement) countElement.textContent = `(${cart.length})`;
-
-    if (!container) return;
-
-    container.innerHTML = '';
-
-    // Variables para cálculo matemático (EN EUROS SIEMPRE)
-    let subtotalEUR = 0;
-
-    // Configuración Moneda
+    // Datos de moneda actuales
     const currentLang = localStorage.getItem('dp_store_lang') || 'es';
     const targetCurrency = currencyMap[currentLang] || 'EUR';
     const rate = exchangeRates[targetCurrency] || 1;
 
-    // Formateador de moneda
     const formatter = new Intl.NumberFormat(currentLang, {
         style: 'currency', currency: targetCurrency
     });
 
-    // LÓGICA DE CARRITO VACÍO
+    let subtotalEUR = 0;
+
+    // Si esta vacio...
     if (cart.length === 0) {
         let emptyText = "Tu carrito está vacío.";
         if (translations[currentLang] && translations[currentLang]['cart_empty']) {
@@ -318,19 +305,20 @@ function updateCartUI() {
         }
         container.innerHTML = `<div class="empty-cart-msg">${emptyText}</div>`;
 
-        // Si vacías el carrito, adiós descuento.
+        // Reseteo todo si no hay items
         subtotalEUR = 0;
         appliedDiscount = 0;
         const input = document.getElementById('coupon-input');
-        if (input) input.value = ''; // Limpiar input
+        if (input) input.value = '';
         const msg = document.getElementById('coupon-message');
-        if (msg) msg.textContent = ''; // Limpiar mensaje
+        if (msg) msg.textContent = '';
 
     } else {
+        // Pinto los items
         cart.forEach((item, index) => {
-            subtotalEUR += item.price; // Sumar precio base
+            subtotalEUR += item.price;
 
-            // Traducción descripción
+            // Traduzco la descripcion si puedo
             let desc = item.descKey;
             let lookupKey = item.descKey ? item.descKey.toLowerCase() : '';
             if (translations[currentLang] && translations[currentLang][lookupKey]) {
@@ -356,29 +344,28 @@ function updateCartUI() {
         });
     }
 
-    // --- CÁLCULOS FINALES ---
+    // --- CALCULO MATEMATICO FINAL ---
     let discountAmountEUR = subtotalEUR * appliedDiscount;
     let totalEUR = subtotalEUR - discountAmountEUR;
 
-    // --- RENDERIZADO ---
+    // --- PINTO LOS PRECIOS ---
     if (countElement) countElement.textContent = `(${cart.length})`;
     if (subtotalElement) subtotalElement.textContent = formatter.format(subtotalEUR * rate);
     if (totalElement) totalElement.textContent = formatter.format(totalEUR * rate);
 
-    // Mostrar/Ocultar fila de descuento
+    // Muestro la fila de descuento solo si hay uno activo
     if (appliedDiscount > 0 && cart.length > 0) {
         discountRow.style.display = 'flex';
         discountPercentElement.textContent = (appliedDiscount * 100) + '%';
         discountPriceElement.textContent = '-' + formatter.format(discountAmountEUR * rate);
-
     } else {
         discountRow.style.display = 'none';
     }
 }
 
 /* ==========================================================================
-   4. WIDGET DE PAGOS RECIENTES
-   Renderiza la lista de últimas compras en el Hero.
+   4. WIDGET DE PAGOS (FAKE)
+   Renderiza la lista de gente que "compró"
    ========================================================================== */
 
 function renderPayments(showAll = false) {
@@ -390,14 +377,13 @@ function renderPayments(showAll = false) {
     const currentLang = localStorage.getItem('dp_store_lang') || 'es';
     let boughtText = 'Compró';
 
-    // Traducir la palabra "Compró"
     if (translations[currentLang] && translations[currentLang]['txt_bought']) {
         boughtText = translations[currentLang]['txt_bought'];
     }
 
     listContainer.innerHTML = '';
 
-    // Mostrar 4 items por defecto, o todos si se pide
+    // Muestro 4 o todos segun le den al boton
     const limit = showAll ? recentPaymentsData.length : 4;
     const dataToShow = recentPaymentsData.slice(0, limit);
 
@@ -415,7 +401,7 @@ function renderPayments(showAll = false) {
         listContainer.innerHTML += html;
     });
 
-    // Controlar botón "Ver Todos"
+    // Cambio el texto del boton ver mas/menos
     if (viewBtn) {
         if (showAll) {
             viewBtn.innerHTML = 'VER MENOS <i class="fas fa-chevron-up"></i>';
@@ -430,24 +416,23 @@ function renderPayments(showAll = false) {
 }
 
 /* ==========================================================================
-   5. SISTEMA DE LOGIN Y EVENTOS GLOBALES
-   Manejo de clics, modales y sesión de usuario simulada.
+   5. LOGIN Y OTRAS COSAS
+   Manejo de clicks fuera y el login falso
    ========================================================================== */
 
-// Evento Global: Cerrar menús al hacer click fuera de ellos
+// Evento pa cerrar menus si clickas fuera
 document.addEventListener('click', (e) => {
-    // 1. Dropdown Idioma
+    // 1. Idioma
     const langDropdown = document.getElementById('lang-dropdown');
     const langTrigger = document.querySelector('.lang-selector');
     if (langDropdown && langTrigger && !langDropdown.contains(e.target) && !langTrigger.contains(e.target)) {
         langDropdown.classList.remove('active');
     }
 
-    // 2. Dropdown Carrito
+    // 2. Carrito (ojo no cerrar si le doy a borrar item)
     const cartDropdown = document.getElementById('cart-dropdown');
     const cartTrigger = document.querySelector('.cart-selector');
 
-    // Ignoramos si el click fue en botones de eliminar o añadir (para no cerrar el carrito al usarlo)
     if (cartDropdown && cartTrigger &&
         !cartDropdown.contains(e.target) &&
         !cartTrigger.contains(e.target) &&
@@ -458,12 +443,12 @@ document.addEventListener('click', (e) => {
     }
 });
 
-// Botón de Login (Abrir Modal)
+// Boton login navbar
 const loginBtn = document.querySelector('.login-btn');
 if (loginBtn) {
     loginBtn.addEventListener('click', (e) => {
         e.preventDefault();
-        // Si ya está logueado, cerrar sesión. Si no, abrir modal.
+        // Si ya esta dentro, pues logout, si no modal
         if (localStorage.getItem('dp_user_logged') === 'true') {
             logoutUser();
         } else {
@@ -476,37 +461,36 @@ function closeLoginModal() {
     document.getElementById('login-modal').classList.remove('active');
 }
 
-// Simular proceso de login (Delay artificial)
+// Simulo que conecta con discord o fivem (fake delay)
 function simulateLogin(provider) {
     const modalBody = document.querySelector('.modal-body');
     const originalContent = modalBody.innerHTML;
 
-    // Mostrar spinner de carga
+    // Spinner de carga
     modalBody.innerHTML = `<div style="padding:40px; color:white;"><i class="fas fa-circle-notch fa-spin fa-2x" style="color:var(--accent-primary)"></i><p style="margin-top:15px">Conectando con ${provider}...</p></div>`;
 
     setTimeout(() => {
-        // Datos de usuario simulados
+        // Datos falsos del usuario
         const userData = {
             name: 'DonPlastico',
             avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=DonPlastico',
             provider: provider
         };
 
-        // Guardar sesión
+        // Guardo sesion
         localStorage.setItem('dp_user_logged', 'true');
         localStorage.setItem('dp_user_data', JSON.stringify(userData));
 
         closeLoginModal();
 
-        // Restaurar modal por si se abre de nuevo
+        // Restauro modal pa la proxima
         setTimeout(() => modalBody.innerHTML = originalContent, 500);
 
-        // Actualizar interfaz
         checkLoginState();
     }, 1500);
 }
 
-// Verificar si hay usuario logueado al cargar
+// Miro si ya estaba logueado al F5
 function checkLoginState() {
     const isLogged = localStorage.getItem('dp_user_logged');
     const loginContainer = document.querySelector('.nav-right .login-btn');
@@ -514,7 +498,7 @@ function checkLoginState() {
     if (isLogged === 'true' && loginContainer) {
         const userData = JSON.parse(localStorage.getItem('dp_user_data'));
 
-        // Reemplazar botón de "Acceder" por perfil de usuario
+        // Cambio el boton por mi perfil
         loginContainer.outerHTML = `
             <div class="user-profile-nav" onclick="logoutUser()">
                 <img src="${userData.avatar}" class="nav-avatar">
@@ -525,55 +509,54 @@ function checkLoginState() {
     }
 }
 
-// Cerrar sesión
+// Cerrar sesion
 function logoutUser() {
     if (confirm("¿Cerrar sesión?")) {
         localStorage.removeItem('dp_user_logged');
         localStorage.removeItem('dp_user_data');
-        location.reload(); // Recargar para limpiar estado
+        location.reload();
     }
 }
 
 /* ==========================================================================
-   6. INICIALIZACIÓN (MAIN)
-   ========================================================================== */
-document.addEventListener('DOMContentLoaded', () => {
-    loadTranslationsData(); // Cargar textos y aplicar idioma guardado
-    checkLoginState();      // Verificar si el usuario ya hizo login
-    updateCartUI();         // Renderizar el carrito guardado
-});
-
-/* ==========================================================================
-   7. LÓGICA DE VISTAS (SPA) Y PAQUETES
+   7. LOGICA DE VISTAS (SPA) Y PAQUETES
    ========================================================================== */
 
-// 1. Cambiar entre Inicio y Paquetes
-function switchView(viewName) {
-    // 1. Ocultar TODAS las vistas
+// 1. Cambiar entre Inicio, Paquetes y Scripts (CON MEMORIA AL F5)
+function switchView(viewName, isRefresh = false) {
+    // Oculto todo
     document.getElementById('view-home').style.display = 'none';
     document.getElementById('view-packages').style.display = 'none';
-    document.getElementById('view-scripts').style.display = 'none'; // <-- NUEVO
+    document.getElementById('view-scripts').style.display = 'none';
 
-    // 2. Quitar clase active de TODOS los links
+    // Quito el active de los links
     const navLinks = document.querySelectorAll('.nav-center a');
     navLinks.forEach(link => link.classList.remove('active'));
 
-    // 3. Mostrar la elegida
+    // Guardo donde estoy pa que no se pierda al recargar
+    localStorage.setItem('dp_active_view', viewName);
+
+    // Muestro lo que toca
     if (viewName === 'home') {
         document.getElementById('view-home').style.display = 'block';
-        navLinks[0].classList.add('active');
+        if (navLinks[0]) navLinks[0].classList.add('active');
     } else if (viewName === 'packages') {
         document.getElementById('view-packages').style.display = 'block';
-        navLinks[1].classList.add('active');
+        if (navLinks[1]) navLinks[1].classList.add('active');
         renderPackages();
-    } else if (viewName === 'scripts') { // <-- NUEVO CASO
+    } else if (viewName === 'scripts') {
         document.getElementById('view-scripts').style.display = 'block';
-        navLinks[2].classList.add('active'); // Asumiendo que SCRIPTS es el 3er link
-        renderScripts(); // Renderizar al entrar
+        if (navLinks[2]) navLinks[2].classList.add('active');
+        renderScripts();
+    }
+
+    // Si le di click yo, subo arriba. Si es F5, me quedo donde estaba
+    if (!isRefresh) {
+        window.scrollTo(0, 0);
     }
 }
 
-// 2. Datos de Paquetes (10 Packs con LISTA DE CONTENIDO)
+// 2. Datos de Paquetes (10 Packs tochos)
 const packagesData = [
     {
         id: "pkg-ui-starter",
@@ -583,7 +566,7 @@ const packagesData = [
         oldPrice: 4.99,
         price: 3.99,
         descKey: "desc_pkg_ui_starter",
-        includes: ["DP-TextUI", "DP-Notify"] // <--- LISTA AÑADIDA
+        includes: ["DP-TextUI", "DP-Notify"] // Lista de lo que trae
     },
     {
         id: "pkg-speed-hud",
@@ -671,13 +654,13 @@ const packagesData = [
         img: "Images/Scripts/DP-CivNets Roleplay.png",
         tags: ["All In One", "Premium"],
         oldPrice: 142.91,
-        price: 99.99,
+        price: 99.99, // OFERTAZO
         descKey: "desc_pkg_ultimate",
         includes: ["DP-Garages", "DP-Banking", "DP-Hud", "DP-Menu", "DP-Fuel V2"]
     }
 ];
 
-// 3. Renderizar Paquetes (CON LISTA DE CONTENIDO)
+// 3. Pinto los Paquetes (con la lista de incluye)
 function renderPackages(filter = 'all') {
     const container = document.getElementById('packages-list');
     if (!container) return;
@@ -689,13 +672,13 @@ function renderPackages(filter = 'all') {
     const rate = exchangeRates[currency] || 1;
     const formatter = new Intl.NumberFormat(currentLang, { style: 'currency', currency: currency });
 
-    // Texto botón
+    // Texto del boton
     let btnText = "ADD TO BASKET";
     if (translations[currentLang] && translations[currentLang]['btn_add_basket']) {
         btnText = translations[currentLang]['btn_add_basket'];
     }
 
-    // Texto "Incluye:"
+    // Texto de "INCLUYE"
     let includesText = "INCLUDES:";
     if (translations[currentLang] && translations[currentLang]['txt_includes']) {
         includesText = translations[currentLang]['txt_includes'];
@@ -710,13 +693,12 @@ function renderPackages(filter = 'all') {
         const displayPrice = formatter.format(pkg.price * rate);
         const displayOldPrice = formatter.format(pkg.oldPrice * rate);
 
-        // Traducción descripción
         let descText = pkg.descKey;
         if (translations[currentLang] && translations[currentLang][pkg.descKey]) {
             descText = translations[currentLang][pkg.descKey];
         }
 
-        // GENERAR HTML DE LA LISTA DE SCRIPTS
+        // Hago el html de la lista de scripts
         let includesListHtml = '';
         if (pkg.includes && pkg.includes.length > 0) {
             includesListHtml = `<div class="pkg-includes-section">
@@ -762,22 +744,19 @@ function renderPackages(filter = 'all') {
     });
 }
 
-// 4. Listeners para filtros
-document.querySelectorAll('.filter-btn').forEach(btn => {
+// 4. Listeners pa los filtros de Paquetes
+document.querySelectorAll('.filter-btn:not(.script-filter-btn)').forEach(btn => {
     btn.addEventListener('click', () => {
-        // Quitar active de todos
-        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-        // Poner active al actual
+        document.querySelectorAll('.filter-btn:not(.script-filter-btn)').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-        // Renderizar con el filtro
         renderPackages(btn.getAttribute('data-filter'));
     });
 });
 
-// 5. Buscador simple
+// 5. Buscador de paquetes
 function filterPackages() {
     const query = document.getElementById('pkg-search').value.toLowerCase();
-    const allCards = document.querySelectorAll('.pkg-card');
+    const allCards = document.querySelectorAll('#packages-list .pkg-card');
 
     allCards.forEach(card => {
         const title = card.querySelector('.pkg-title').textContent.toLowerCase();
@@ -790,10 +769,10 @@ function filterPackages() {
 }
 
 /* ==========================================================================
-   8. LÓGICA DE VISTA SCRIPTS (19 ITEMS)
+   8. LOGICA DE VISTA SCRIPTS (19 ITEMS)
    ========================================================================== */
 
-// 1. Base de datos de Scripts (18 Items) - PRECIOS ACTUALIZADOS
+// 1. La base de datos de los scripts (son 18 creo)... ya le actualice los precios a lo que dijimos
 const scriptsData = [
     {
         id: "dp-textui",
@@ -1005,39 +984,34 @@ const scriptsData = [
     }
 ];
 
-// 2. Renderizar Scripts
+// 2. Pinto los Scripts (igual que paquetes pero pal otro div)
 function renderScripts(filter = 'all') {
     const container = document.getElementById('scripts-list');
     if (!container) return;
 
     container.innerHTML = '';
 
-    // Configuración Moneda
     const currentLang = localStorage.getItem('dp_store_lang') || 'es';
     const currency = currencyMap[currentLang] || 'EUR';
     const rate = exchangeRates[currency] || 1;
     const formatter = new Intl.NumberFormat(currentLang, { style: 'currency', currency: currency });
 
-    // Texto Botón
     let btnText = "ADD TO BASKET";
     if (translations[currentLang] && translations[currentLang]['btn_add_basket']) {
         btnText = translations[currentLang]['btn_add_basket'];
     }
 
-    // Filtrado
     const filteredData = filter === 'all'
         ? scriptsData
         : scriptsData.filter(item => item.tags.some(tag => tag.toLowerCase() === filter.toLowerCase()));
 
     filteredData.forEach(item => {
-        // Generar tags HTML
         const tagsHtml = item.tags.map(tag => `<span class="pkg-tag">${tag}</span>`).join('');
 
-        // Precio (Si es 0, poner GRATIS/FREE)
         let displayPrice = formatter.format(item.price * rate);
-        if (item.price === 0) displayPrice = "FREE";
+        if (item.price === 0) displayPrice = "FREE"; // Si es 0 pongo FREE
 
-        // Precio tachado falso (un 20% más) para efecto visual
+        // Precio tachado falso pa que parezca oferta
         const oldPriceVal = item.price * 1.2;
         const displayOldPrice = item.price > 0 ? formatter.format(oldPriceVal * rate) : "";
 
@@ -1058,7 +1032,7 @@ function renderScripts(filter = 'all') {
                         data-name="${item.name}"
                         data-base-price="${item.price}"
                         data-img="${item.img}"
-                        data-desc="${item.desc}"
+                        data-desc="${item.descKey}"
                         onclick="addToCart(this)">
                         <i class="fas fa-shopping-basket"></i> ${btnText}
                     </button>
@@ -1069,7 +1043,7 @@ function renderScripts(filter = 'all') {
     });
 }
 
-// 3. Listeners Filtros Scripts
+// 3. Listeners pal filtro de scripts
 document.querySelectorAll('.script-filter-btn').forEach(btn => {
     btn.addEventListener('click', () => {
         document.querySelectorAll('.script-filter-btn').forEach(b => b.classList.remove('active'));
@@ -1078,10 +1052,9 @@ document.querySelectorAll('.script-filter-btn').forEach(btn => {
     });
 });
 
-// 4. Buscador Scripts
+// 4. Buscador de Scripts
 function filterScripts() {
     const query = document.getElementById('script-search').value.toLowerCase();
-    // Buscamos solo dentro de #scripts-list
     const allCards = document.querySelectorAll('#scripts-list .pkg-card');
 
     allCards.forEach(card => {
@@ -1093,3 +1066,36 @@ function filterScripts() {
         }
     });
 }
+
+/* ==========================================================================
+   EVENTO: GUARDAR SCROLL AL REFRESCAR
+   Pa que no te suba arriba si tiras de F5
+   ========================================================================== */
+window.addEventListener('beforeunload', () => {
+    localStorage.setItem('dp_scroll_pos', window.scrollY);
+});
+
+/* ==========================================================================
+   6. INICIALIZACIÓN - CON MEMORIA DE DONDE ESTABAS
+   ========================================================================== */
+document.addEventListener('DOMContentLoaded', () => {
+    loadTranslationsData();
+    checkLoginState();
+    updateCartUI();
+
+    // 1. Recupero la vista donde estaba el tio
+    const savedView = localStorage.getItem('dp_active_view') || 'home';
+
+    // Le digo que es un refresh (true) pa que no scrollee arriba
+    switchView(savedView, true);
+
+    // 2. Recupero donde estaba mirando
+    const savedScroll = localStorage.getItem('dp_scroll_pos');
+
+    if (savedScroll) {
+        // Un timeout pequeñito pa asegurar que carga todo antes de mover
+        setTimeout(() => {
+            window.scrollTo(0, parseInt(savedScroll));
+        }, 50);
+    }
+});
