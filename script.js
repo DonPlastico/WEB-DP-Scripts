@@ -660,7 +660,7 @@ const packagesData = [
     }
 ];
 
-// 3. Pinto los Paquetes (con la lista de incluye)
+// 3. Pinto los Paquetes (con la lista de incluye y logica WIP)
 function renderPackages(filter = 'all') {
     const container = document.getElementById('packages-list');
     if (!container) return;
@@ -672,13 +672,17 @@ function renderPackages(filter = 'all') {
     const rate = exchangeRates[currency] || 1;
     const formatter = new Intl.NumberFormat(currentLang, { style: 'currency', currency: currency });
 
-    // Texto del boton
+    // Pillo los textos de los botones
     let btnText = "ADD TO BASKET";
     if (translations[currentLang] && translations[currentLang]['btn_add_basket']) {
         btnText = translations[currentLang]['btn_add_basket'];
     }
 
-    // Texto de "INCLUYE"
+    let comingSoonText = "COMING SOON";
+    if (translations[currentLang] && translations[currentLang]['btn_coming_soon']) {
+        comingSoonText = translations[currentLang]['btn_coming_soon'];
+    }
+
     let includesText = "INCLUDES:";
     if (translations[currentLang] && translations[currentLang]['txt_includes']) {
         includesText = translations[currentLang]['txt_includes'];
@@ -698,7 +702,6 @@ function renderPackages(filter = 'all') {
             descText = translations[currentLang][pkg.descKey];
         }
 
-        // Hago el html de la lista de scripts
         let includesListHtml = '';
         if (pkg.includes && pkg.includes.length > 0) {
             includesListHtml = `<div class="pkg-includes-section">
@@ -711,6 +714,32 @@ function renderPackages(filter = 'all') {
                                  </div>`;
         }
 
+        // AQUI VIENE LA MAGIA: Compruebo si esta en WIP (Proximamente)
+        const isWip = pkg.tags.includes("WIP");
+        let buttonHtml = '';
+
+        if (isWip) {
+            // Si es WIP, le pongo clase disabled y le quito el onclick pa que no compren
+            buttonHtml = `
+                <button class="pkg-btn disabled">
+                    <i class="fas fa-clock"></i> ${comingSoonText}
+                </button>
+            `;
+        } else {
+            // Si esta normal, le pongo el boton de comprar
+            buttonHtml = `
+                <button class="pkg-btn" 
+                    data-id="${pkg.id}"
+                    data-name="${pkg.name}"
+                    data-base-price="${pkg.price}"
+                    data-img="${pkg.img}"
+                    data-desc="${pkg.descKey}"
+                    onclick="addToCart(this)">
+                    <i class="fas fa-shopping-basket"></i> ${btnText} 
+                </button>
+            `;
+        }
+
         const html = `
             <div class="pkg-card fade-in">
                 <div class="pkg-img-container">
@@ -719,25 +748,13 @@ function renderPackages(filter = 'all') {
                 </div>
                 <div class="pkg-info">
                     <h3 class="pkg-title">${pkg.name}</h3>
-                    
                     <p class="pkg-desc">${descText}</p>
-                    
                     ${includesListHtml}
-
                     <div class="pkg-price-row">
                         <span class="pkg-old-price">${displayOldPrice}</span>
                         <span class="pkg-new-price">${displayPrice}</span>
                     </div>
-                    <button class="pkg-btn" 
-                        data-id="${pkg.id}"
-                        data-name="${pkg.name}"
-                        data-base-price="${pkg.price}"
-                        data-img="${pkg.img}"
-                        data-desc="${pkg.descKey}"
-                        onclick="addToCart(this)">
-                        <i class="fas fa-shopping-basket"></i> ${btnText} 
-                    </button>
-                </div>
+                    ${buttonHtml} </div>
             </div>
         `;
         container.innerHTML += html;
@@ -984,7 +1001,7 @@ const scriptsData = [
     }
 ];
 
-// 2. Pinto los Scripts (igual que paquetes pero pal otro div)
+// 2. Pinto los Scripts (igual pero pal otro div y tambien con la logica WIP)
 function renderScripts(filter = 'all') {
     const container = document.getElementById('scripts-list');
     if (!container) return;
@@ -1001,6 +1018,12 @@ function renderScripts(filter = 'all') {
         btnText = translations[currentLang]['btn_add_basket'];
     }
 
+    // Pillo tambien el texto de proximamente aqui
+    let comingSoonText = "COMING SOON";
+    if (translations[currentLang] && translations[currentLang]['btn_coming_soon']) {
+        comingSoonText = translations[currentLang]['btn_coming_soon'];
+    }
+
     const filteredData = filter === 'all'
         ? scriptsData
         : scriptsData.filter(item => item.tags.some(tag => tag.toLowerCase() === filter.toLowerCase()));
@@ -1009,11 +1032,36 @@ function renderScripts(filter = 'all') {
         const tagsHtml = item.tags.map(tag => `<span class="pkg-tag">${tag}</span>`).join('');
 
         let displayPrice = formatter.format(item.price * rate);
-        if (item.price === 0) displayPrice = "FREE"; // Si es 0 pongo FREE
+        if (item.price === 0) displayPrice = "FREE";
 
-        // Precio tachado falso pa que parezca oferta
         const oldPriceVal = item.price * 1.2;
         const displayOldPrice = item.price > 0 ? formatter.format(oldPriceVal * rate) : "";
+
+        // AQUI TAMBIEN: Miro si es WIP
+        const isWip = item.tags.includes("WIP");
+        let buttonHtml = '';
+
+        if (isWip) {
+            // Boton bloqueado
+            buttonHtml = `
+                <button class="pkg-btn disabled">
+                    <i class="fas fa-clock"></i> ${comingSoonText}
+                </button>
+            `;
+        } else {
+            // Boton normal
+            buttonHtml = `
+                <button class="pkg-btn" 
+                    data-id="${item.id}"
+                    data-name="${item.name}"
+                    data-base-price="${item.price}"
+                    data-img="${item.img}"
+                    data-desc="${item.descKey}"
+                    onclick="addToCart(this)">
+                    <i class="fas fa-shopping-basket"></i> ${btnText}
+                </button>
+            `;
+        }
 
         const html = `
             <div class="pkg-card fade-in">
@@ -1027,15 +1075,7 @@ function renderScripts(filter = 'all') {
                         ${item.price > 0 ? `<span class="pkg-old-price">${displayOldPrice}</span>` : ''}
                         <span class="pkg-new-price">${displayPrice}</span>
                     </div>
-                    <button class="pkg-btn" 
-                        data-id="${item.id}"
-                        data-name="${item.name}"
-                        data-base-price="${item.price}"
-                        data-img="${item.img}"
-                        data-desc="${item.descKey}"
-                        onclick="addToCart(this)">
-                        <i class="fas fa-shopping-basket"></i> ${btnText}
-                    </button>
+                    ${buttonHtml}
                 </div>
             </div>
         `;

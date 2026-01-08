@@ -1639,6 +1639,22 @@ ul {
     box-shadow: 0 0 25px var(--accent-glow);
 }
 
+/* Boton deshabilitao (WIP / Proximamente) */
+.pkg-btn.disabled {
+    background: rgba(255, 255, 255, 0.05);
+    color: #555;
+    border-color: #333;
+    cursor: not-allowed;
+    pointer-events: none;
+    box-shadow: none;
+}
+
+.pkg-btn.disabled:hover {
+    transform: none;
+    box-shadow: none;
+    border-color: #333;
+}
+
 /* ==========================================================================
    11. ANIMACIONES Y RESPONSIVE (MÓVIL/TABLET)
    ========================================================================== */
